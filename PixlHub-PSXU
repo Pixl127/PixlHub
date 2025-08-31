@@ -42,7 +42,7 @@ local Window = Rayfield:CreateWindow({
 local InfoTab = Window:CreateTab("Info", 4483362458)
 --local FarmTab = Window:CreateTab("Main", 4483362458)
 local EggTab = Window:CreateTab("Eggs", 4483362458)
---local MiscTab = Window:CreateTab("Misc", 4483362458)
+local MiscTab = Window:CreateTab("Misc", 4483362458)
 local ScriptTab = Window:CreateTab("Spript", 4483362458)
 local DevTab = Window:CreateTab("Dev", 4483362458)
 
@@ -254,7 +254,6 @@ local AntiAFKToggle = MiscTab:CreateToggle({
         if AntiAFK then
             -- Verbindung herstellen
             connection = game.Players.LocalPlayer.Idled:Connect(function()
-                -- Simuliere Mausklick um AFK-Kick zu vermeiden
                 game:GetService("VirtualUser"):ClickButton2(Vector2.new())
             end)
         else
