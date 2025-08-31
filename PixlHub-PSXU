@@ -5,7 +5,7 @@ local Window = Rayfield:CreateWindow({
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "PixlHub",
    LoadingSubtitle = "by Pixl",
-   ShowText = "", -- for mobile users to unhide rayfield, change if you'd like
+   ShowText = "",         -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Default",     -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
@@ -101,6 +101,8 @@ end
 local selectedEgg = allEggs[1]
 local selectedAmount = "1Egg"
 local autoOpen = false
+local disableHatchAnimation = false
+local originalOpenEggFunctions = {}
 
 -- 🥚 Dropdown für Egg-Auswahl
 local EggSelectionDropdown = EggTab:CreateDropdown({
@@ -161,11 +163,11 @@ end
 local function teleportTo(position)
     local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if hrp then
-        hrp.CFrame = CFrame.new(position + Vector3.new(0, 3, 0)) -- leicht darüber, um nicht festzustecken
+        hrp.CFrame = CFrame.new(position + Vector3.new(0, 3, 0))
     end
 end
 
--- 🕹 Toggle für Auto-Hatch mit Sicherheitscheck
+-- 🕹 Toggle für Auto-Hatch
 local AutoOpenEggToggle = EggTab:CreateToggle({
     Name = "Auto Hatch Selected Egg (Safe)",
     CurrentValue = false,
@@ -178,7 +180,6 @@ local AutoOpenEggToggle = EggTab:CreateToggle({
                     if selectedEgg then
                         local eggPos = getEggPositionByID(selectedEgg)
                         if eggPos then
-                            -- Wenn weiter als 20 Studs entfernt → teleportieren
                             if distanceTo(eggPos) > 20 then
                                 teleportTo(eggPos)
                                 task.wait(0.5)
@@ -199,13 +200,60 @@ local AutoOpenEggToggle = EggTab:CreateToggle({
                                 :InvokeServer(unpack(args))
                         end
                     end
-                    task.wait(0.3) -- alle 0,3 Sekunden
+                    task.wait(0.3)
                 end
             end)
         end
     end,
 })
 
+-- 🖼 Toggle zum „Unsichtbar-Machen“ der Hatch-Animation via GUI
+local DisableHatchAnimToggle = EggTab:CreateToggle({
+    Name = "Disable Hatch Animation",
+    CurrentValue = false,
+    Flag = "Toggle_DisableHatchAnim",
+    Callback = function(Value)
+        disableHatchAnimation = Value
+        if disableHatchAnimation then
+            -- Überschreibe OpenEgg-Funktion
+            for i, v in pairs(getgc(true)) do
+                if typeof(v) == "table" and rawget(v, "OpenEgg") then
+                    originalOpenEggFunctions[v] = v.OpenEgg
+                    v.OpenEgg = function() return end
+                end
+            end
+        else
+            -- Stelle originale Funktionen wieder her
+            for v, func in pairs(originalOpenEggFunctions) do
+                if v then
+                    v.OpenEgg = func
+                end
+            end
+            originalOpenEggFunctions = {}
+        end
+    end,
+})
+
+-- Listener: verschiebt neue Hatch-Objekte aus dem Sichtfeld
+workspace.CurrentCamera.ChildAdded:Connect(function(child)
+    if disableHatchAnimation then
+        -- Prüfen, ob es eine Hatch-Animation ist
+        if child.Name:match("EggOpenPetInfo") or child:IsA("Model") or child:IsA("Part") or child:IsA("MeshPart") then
+            pcall(function()
+                child.CFrame = CFrame.new(0, -1000, 0)
+                if child:IsA("BasePart") then
+                    child.Transparency = 1
+                elseif child:IsA("Model") then
+                    for _, part in ipairs(child:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.Transparency = 1
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
 
 
 
