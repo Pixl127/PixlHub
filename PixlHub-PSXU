@@ -138,9 +138,36 @@ local EggAmountDropdown = EggTab:CreateDropdown({
     end,
 })
 
--- 🕹 Toggle für Auto-Hatch
+-- 🛡 Schutzfunktionen
+local function getEggPositionByID(eggID)
+    for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
+        if area:FindFirstChild("Eggs") then
+            for _, egg in ipairs(area.Eggs:GetChildren()) do
+                if egg:GetAttribute("ID") == eggID then
+                    return egg.PrimaryPart and egg.PrimaryPart.Position or egg.Position
+                end
+            end
+        end
+    end
+    return nil
+end
+
+local function distanceTo(position)
+    local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return math.huge end
+    return (hrp.Position - position).Magnitude
+end
+
+local function teleportTo(position)
+    local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        hrp.CFrame = CFrame.new(position + Vector3.new(0, 3, 0)) -- leicht darüber, um nicht festzustecken
+    end
+end
+
+-- 🕹 Toggle für Auto-Hatch mit Sicherheitscheck
 local AutoOpenEggToggle = EggTab:CreateToggle({
-    Name = "Auto Hatch Selected Egg",
+    Name = "Auto Hatch Selected Egg (Safe)",
     CurrentValue = false,
     Flag = "Toggle_AutoHatch",
     Callback = function(Value)
@@ -149,23 +176,30 @@ local AutoOpenEggToggle = EggTab:CreateToggle({
             task.spawn(function()
                 while autoOpen do
                     if selectedEgg then
-                        -- Mapping basierend auf deinem Schema
-                        local open3, open8, extra = false, false, false
-                        if selectedAmount == "3Eggs" then
-                            open3, open8, extra = true, false, false
-                        elseif selectedAmount == "8Eggs" then
-                            open3, open8, extra = false, true, true
-                        end
+                        local eggPos = getEggPositionByID(selectedEgg)
+                        if eggPos then
+                            -- Wenn weiter als 20 Studs entfernt → teleportieren
+                            if distanceTo(eggPos) > 20 then
+                                teleportTo(eggPos)
+                                task.wait(0.5)
+                            end
 
-                        local args = {
-                            { selectedEgg, open3, open8, extra }
-                        }
-                        workspace:WaitForChild("__THINGS")
-                            :WaitForChild("__REMOTES")
-                            :WaitForChild("buy egg")
-                            :InvokeServer(unpack(args))
+                            -- Flags für 1, 3 oder 8 Eggs
+                            local open3, open8, extra = false, false, false
+                            if selectedAmount == "3Eggs" then
+                                open3 = true
+                            elseif selectedAmount == "8Eggs" then
+                                open8, extra = true, true
+                            end
+
+                            local args = { { selectedEgg, open3, open8, extra } }
+                            workspace:WaitForChild("__THINGS")
+                                :WaitForChild("__REMOTES")
+                                :WaitForChild("buy egg")
+                                :InvokeServer(unpack(args))
+                        end
                     end
-                    task.wait(0.3)
+                    task.wait(0.3) -- alle 0,3 Sekunden
                 end
             end)
         end
