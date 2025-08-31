@@ -14,9 +14,9 @@ local Window = Rayfield:CreateWindow({
    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
 
    ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
+      Enabled = true,
+      FolderName = "PixlLib", -- Create a custom folder for your hub/game
+      FileName = "PixlHub"
    },
 
    Discord = {
@@ -290,3 +290,5 @@ local LoadInfiniteYieldButton = DevTab:CreateButton({
       loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
    end,
 })
+
+-- loadstring(game:HttpGet(""))()
