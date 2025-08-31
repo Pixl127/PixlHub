@@ -1,11 +1,11 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Rayfield Example Window",
+   Name = "PixlHub",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Rayfield Interface Suite",
-   LoadingSubtitle = "by Sirius",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+   LoadingTitle = "PixlHub",
+   LoadingSubtitle = "by Pixl",
+   ShowText = "", -- for mobile users to unhide rayfield, change if you'd like
    Theme = "Default",     -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
@@ -14,7 +14,7 @@ local Window = Rayfield:CreateWindow({
    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
 
    ConfigurationSaving = {
-      Enabled = true,
+      Enabled = false,
       FolderName = nil, -- Create a custom folder for your hub/game
       FileName = "Big Hub"
    },
@@ -48,7 +48,16 @@ local DevTab = Window:CreateTab("Dev", 4483362458)
 
 
 
+--------------------------------------------------------
 -- Info Tab
+--------------------------------------------------------
+
+InfoTab:CreateParagraph({
+   Title = "test?",
+   Content = [[
+yo idk bro
+]]
+})
 
 
 --------------------------------------------------------
@@ -75,19 +84,55 @@ local AutoBreakPartyCrateToggle = FarmTab:CreateToggle({
 --------------------------------------------------------
 -- Egg Tab
 --------------------------------------------------------
+--[[
 local AutoOpenEggToggle = EggTab:CreateToggle({
    Name = "Auto Open Egg",
    CurrentValue = false,
    Flag = "Toggle1",
    Callback = function(Value)
-
    end,
 })
+--]]
+
+
+
+local allEggs = {}
+
+for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
+   if area:FindFirstChild("Eggs") then
+      for _, egg in ipairs(area.Eggs:GetChildren()) do
+         local id = egg:GetAttribute("ID")
+         if id then
+            table.insert(allEggs, id)
+         end
+      end
+   end
+end
+
+local EggSelectionDropdown = EggTab:CreateDropdown({
+   Name = "Select Egg",
+   Options = allEggs,             -- hier deine dynamische Liste einsetzen
+   CurrentOption = { allEggs[1] }, -- z. B. erstes Egg als Default nehmen
+   MultipleOptions = false,
+   Flag = "Dropdown1",
+   Callback = function(Options)
+      Rayfield:Notify({
+         Title = "Egg Selected:",
+         Content = table.concat(Options, ", "),
+         Duration = 6.5,
+         Image = 4483362458,
+      })
+   end,
+})
+
+
+
 
 --------------------------------------------------------
 -- Misc Tab
 --------------------------------------------------------
 
+--[[
 local function collectGifts()
    while task.wait(60) do
       for number = 1, 12, 1 do
@@ -106,12 +151,15 @@ local AutoCollectFreeGiftsToggle = MiscTab:CreateToggle({
       collectGifts()
    end,
 })
+--]]
+
+
 
 
 --------------------------------------------------------
 -- Script Tab
 --------------------------------------------------------
-local DestroyUiButton = MiscTab:CreateButton({
+local DestroyUiButton = ScriptTab:CreateButton({
    Name = "Destroy UI",
    Callback = function()
       Rayfield:Destroy()
@@ -141,3 +189,53 @@ local args = {
 }
 workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES"):WaitForChild("MAIN"):FireServer(unpack(args))
 --]]
+
+
+
+--[[
+
+local allEggs = {}
+
+for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
+   if area:FindFirstChild("Eggs") then
+      for _, egg in ipairs(area.Eggs:GetChildren()) do
+         table.insert(allEggs, egg)
+         print(egg.Name)
+      end
+   end
+end
+
+
+local args = {
+   { "Cracked Egg", false, true, true }
+}
+workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES"):WaitForChild("buy egg"):InvokeServer(unpack(args))
+
+local allEggs = {}
+
+for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
+    if area:FindFirstChild("Eggs") then
+        for _, egg in ipairs(area.Eggs:GetChildren()) do
+            local id = egg:GetAttribute("ID")
+            if id then
+                table.insert(allEggs, id)
+                print(id)
+            end
+        end
+    end
+end
+
+
+local Dropdown = EggTab:CreateDropdown({
+   Name = "Select Egg",
+   Options = {"Option 1","Option 2"},
+   CurrentOption = {"Option 1"},
+   MultipleOptions = false,
+   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Options)
+   -- The function that takes place when the selected option is changed
+   -- The variable (Options) is a table of strings for the current selected options
+   end,
+})
+--]]
+
