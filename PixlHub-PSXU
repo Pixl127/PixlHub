@@ -84,46 +84,94 @@ local AutoBreakPartyCrateToggle = FarmTab:CreateToggle({
 --------------------------------------------------------
 -- Egg Tab
 --------------------------------------------------------
---[[
-local AutoOpenEggToggle = EggTab:CreateToggle({
-   Name = "Auto Open Egg",
-   CurrentValue = false,
-   Flag = "Toggle1",
-   Callback = function(Value)
-   end,
-})
---]]
-
-
-
+-- 🥚 Alle Eggs aus der Map einsammeln
 local allEggs = {}
-
 for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
-   if area:FindFirstChild("Eggs") then
-      for _, egg in ipairs(area.Eggs:GetChildren()) do
-         local id = egg:GetAttribute("ID")
-         if id then
-            table.insert(allEggs, id)
-         end
-      end
-   end
+    if area:FindFirstChild("Eggs") then
+        for _, egg in ipairs(area.Eggs:GetChildren()) do
+            local id = egg:GetAttribute("ID")
+            if id then
+                table.insert(allEggs, id)
+            end
+        end
+    end
 end
 
+-- 📦 Variablen für Auswahl und Status
+local selectedEgg = allEggs[1]
+local selectedAmount = "1Egg"
+local autoOpen = false
+
+-- 🥚 Dropdown für Egg-Auswahl
 local EggSelectionDropdown = EggTab:CreateDropdown({
-   Name = "Select Egg",
-   Options = allEggs,             -- hier deine dynamische Liste einsetzen
-   CurrentOption = { allEggs[1] }, -- z. B. erstes Egg als Default nehmen
-   MultipleOptions = false,
-   Flag = "Dropdown1",
-   Callback = function(Options)
-      Rayfield:Notify({
-         Title = "Egg Selected:",
-         Content = table.concat(Options, ", "),
-         Duration = 6.5,
-         Image = 4483362458,
-      })
-   end,
+    Name = "Select Egg",
+    Options = allEggs,
+    CurrentOption = { selectedEgg },
+    MultipleOptions = false,
+    Flag = "Dropdown_SelectEgg",
+    Callback = function(Options)
+        selectedEgg = Options[1]
+        Rayfield:Notify({
+            Title = "Egg Selected",
+            Content = selectedEgg,
+            Duration = 5,
+            Image = 4483362458,
+        })
+    end,
 })
+
+-- 🔢 Dropdown für Menge-Auswahl
+local EggAmountDropdown = EggTab:CreateDropdown({
+    Name = "Select Egg Opening Amount",
+    Options = { "1Egg", "3Eggs", "8Eggs" },
+    CurrentOption = { selectedAmount },
+    MultipleOptions = false,
+    Flag = "Dropdown_SelectAmount",
+    Callback = function(Options)
+        selectedAmount = Options[1]
+        Rayfield:Notify({
+            Title = "Opening Amount Selected",
+            Content = selectedAmount,
+            Duration = 5,
+            Image = 4483362458,
+        })
+    end,
+})
+
+-- 🕹 Toggle für Auto-Hatch
+local AutoOpenEggToggle = EggTab:CreateToggle({
+    Name = "Auto Hatch Selected Egg",
+    CurrentValue = false,
+    Flag = "Toggle_AutoHatch",
+    Callback = function(Value)
+        autoOpen = Value
+        if autoOpen then
+            task.spawn(function()
+                while autoOpen do
+                    if selectedEgg then
+                        -- Mapping basierend auf deinem Schema
+                        local open3, open8, extra = false, false, false
+                        if selectedAmount == "3Eggs" then
+                            open3, open8, extra = true, false, false
+                        elseif selectedAmount == "8Eggs" then
+                            open3, open8, extra = false, true, true
+                        end
+
+                        local args = {
+                            { selectedEgg, open3, open8, extra }
+                        }
+                        workspace:WaitForChild("__THINGS")
+                            :WaitForChild("__REMOTES")
+                            :WaitForChild("buy egg")
+                            :InvokeServer(unpack(args))
+                    end
+                    task.wait(0.3)
+                end
+            end)
+        end
+    end,
+})
+
 
 
 
@@ -175,67 +223,3 @@ local LoadInfiniteYieldButton = DevTab:CreateButton({
       loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
    end,
 })
-
---[[
-local args = {
-	"b",
-	"redeem free gift"
-}
-workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES"):WaitForChild("MAIN"):FireServer(unpack(args))
-
-local args = {
-	"a",
-	"claim orbs"
-}
-workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES"):WaitForChild("MAIN"):FireServer(unpack(args))
---]]
-
-
-
---[[
-
-local allEggs = {}
-
-for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
-   if area:FindFirstChild("Eggs") then
-      for _, egg in ipairs(area.Eggs:GetChildren()) do
-         table.insert(allEggs, egg)
-         print(egg.Name)
-      end
-   end
-end
-
-
-local args = {
-   { "Cracked Egg", false, true, true }
-}
-workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES"):WaitForChild("buy egg"):InvokeServer(unpack(args))
-
-local allEggs = {}
-
-for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
-    if area:FindFirstChild("Eggs") then
-        for _, egg in ipairs(area.Eggs:GetChildren()) do
-            local id = egg:GetAttribute("ID")
-            if id then
-                table.insert(allEggs, id)
-                print(id)
-            end
-        end
-    end
-end
-
-
-local Dropdown = EggTab:CreateDropdown({
-   Name = "Select Egg",
-   Options = {"Option 1","Option 2"},
-   CurrentOption = {"Option 1"},
-   MultipleOptions = false,
-   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Options)
-   -- The function that takes place when the selected option is changed
-   -- The variable (Options) is a table of strings for the current selected options
-   end,
-})
---]]
-
