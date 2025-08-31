@@ -53,7 +53,7 @@ local DevTab = Window:CreateTab("Dev", 4483362458)
 --------------------------------------------------------
 -- Farm Tab
 --------------------------------------------------------
-local AutoBreakRbLb = FarmTab:CreateToggle({
+local AutoBreakRbLbToggle = FarmTab:CreateToggle({
    Name = "Auto Break Rainbow Lucky Block",
    CurrentValue = false,
    Flag = "Toggle1",
@@ -62,7 +62,7 @@ local AutoBreakRbLb = FarmTab:CreateToggle({
    end,
 })
 
-local AutoBreakPartyCrate = FarmTab:CreateToggle({
+local AutoBreakPartyCrateToggle = FarmTab:CreateToggle({
    Name = "Auto Break Party Crate",
    CurrentValue = false,
    Flag = "Toggle1",
@@ -74,7 +74,7 @@ local AutoBreakPartyCrate = FarmTab:CreateToggle({
 --------------------------------------------------------
 -- Egg Tab
 --------------------------------------------------------
-local AutoOpenEgg = EggTab:CreateToggle({
+local AutoOpenEggToggle = EggTab:CreateToggle({
    Name = "Auto Open Egg",
    CurrentValue = false,
    Flag = "Toggle1",
@@ -86,7 +86,7 @@ local AutoOpenEgg = EggTab:CreateToggle({
 --------------------------------------------------------
 -- Misc Tab
 --------------------------------------------------------
-local DestroyUi = MiscTab:CreateButton({
+local DestroyUiButton = MiscTab:CreateButton({
    Name = "Destroy UI",
    Callback = function()
     Rayfield:Destroy()
@@ -96,9 +96,13 @@ local DestroyUi = MiscTab:CreateButton({
 --------------------------------------------------------
 -- Dev Tab
 --------------------------------------------------------
-local Button = DevTab:CreateButton({
+local LoadInfiniteYieldButton = DevTab:CreateButton({
    Name = "Load Infinite Yield",
    Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
    end,
 })
+
+"https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/PixlHub-PSXU.lua?token=GHSAT0AAAAAADKHVAPKEX4TNODBZO4VDCYQ2FUJ45Q"
+
+loadstring(game:HttpGet(""))()
