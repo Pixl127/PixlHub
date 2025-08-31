@@ -40,9 +40,9 @@ local Window = Rayfield:CreateWindow({
 -- Tabs
 --------------------------------------------------------
 local InfoTab = Window:CreateTab("Info", 4483362458)
-local FarmTab = Window:CreateTab("Main", 4483362458)
+--local FarmTab = Window:CreateTab("Main", 4483362458)
 local EggTab = Window:CreateTab("Eggs", 4483362458)
-local MiscTab = Window:CreateTab("Misc", 4483362458)
+--local MiscTab = Window:CreateTab("Misc", 4483362458)
 local ScriptTab = Window:CreateTab("Spript", 4483362458)
 local DevTab = Window:CreateTab("Dev", 4483362458)
 
@@ -54,32 +54,13 @@ local DevTab = Window:CreateTab("Dev", 4483362458)
 
 InfoTab:CreateParagraph({
    Title = "test?",
-   Content = [[
-yo idk bro
-]]
+   Content = [[ yo idk bro ]]
 })
 
 
 --------------------------------------------------------
 -- Farm Tab
 --------------------------------------------------------
-local AutoBreakRbLbToggle = FarmTab:CreateToggle({
-   Name = "Auto Break Rainbow Lucky Block",
-   CurrentValue = false,
-   Flag = "Toggle1",
-   Callback = function(Value)
-
-   end,
-})
-
-local AutoBreakPartyCrateToggle = FarmTab:CreateToggle({
-   Name = "Auto Break Party Crate",
-   CurrentValue = false,
-   Flag = "Toggle1",
-   Callback = function(Value)
-
-   end,
-})
 
 --------------------------------------------------------
 -- Egg Tab
@@ -110,6 +91,7 @@ local EggSelectionDropdown = EggTab:CreateDropdown({
     Options = allEggs,
     CurrentOption = { selectedEgg },
     MultipleOptions = false,
+    Searchable = true,   -- <- Hier aktivieren
     Flag = "Dropdown_SelectEgg",
     Callback = function(Options)
         selectedEgg = Options[1]
@@ -261,27 +243,30 @@ end)
 --------------------------------------------------------
 -- Misc Tab
 --------------------------------------------------------
+local AntiAFK = false
+local connection
 
---[[
-local function collectGifts()
-   while task.wait(60) do
-      for number = 1, 12, 1 do
-         workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES"):WaitForChild("redeem free gift"):InvokeServer(number)
-      end
-   end
-end
-
-local toggle = false
-local AutoCollectFreeGiftsToggle = MiscTab:CreateToggle({
-   Name = "Auto Collect Free Gifts",
-   CurrentValue = false,
-   Flag = "Toggle1",
-   Callback = function(Value)
-      toggle = !toggle
-      collectGifts()
-   end,
+local AntiAFKToggle = MiscTab:CreateToggle({
+    Name = "Anti-AFK",
+    CurrentValue = false,
+    Flag = "Toggle_AntiAFK",
+    Callback = function(Value)
+        AntiAFK = Value
+        if AntiAFK then
+            -- Verbindung herstellen
+            connection = game.Players.LocalPlayer.Idled:Connect(function()
+                -- Simuliere Mausklick um AFK-Kick zu vermeiden
+                game:GetService("VirtualUser"):ClickButton2(Vector2.new())
+            end)
+        else
+            if connection then
+                connection:Disconnect()
+                connection = nil
+            end
+        end
+    end,
 })
---]]
+
 
 
 
