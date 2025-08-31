@@ -91,7 +91,6 @@ local EggSelectionDropdown = EggTab:CreateDropdown({
     Options = allEggs,
     CurrentOption = { selectedEgg },
     MultipleOptions = false,
-    Searchable = true,   -- <- Hier aktivieren
     Flag = "Dropdown_SelectEgg",
     Callback = function(Options)
         selectedEgg = Options[1]
@@ -291,4 +290,4 @@ local LoadInfiniteYieldButton = DevTab:CreateButton({
    end,
 })
 
--- loadstring(game:HttpGet(""))()
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/PixlHub-PSXU"))()
