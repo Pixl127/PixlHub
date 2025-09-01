@@ -177,7 +177,6 @@ if game.PlaceId == 6284583030 or game.PlaceId == 10321372166 or game.PlaceId == 
 	--			if not require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Client")).Settings.SoundsEnabled then
 	--				sound:SetAttribute("CachedVolume", sound.Volume)
 	--				sound.Volume = 0
-	--			end
 	--			sound:Play()
 	--			getfenv(originalPlay).AddToGarbageCollection(sound, isGargabe)
 	--			return sound
@@ -202,8 +201,8 @@ if game.PlaceId == 6284583030 or game.PlaceId == 10321372166 or game.PlaceId == 
 	
 	local GetRemoteFunction = debug.getupvalue(Library.Network.Invoke, 2)
 		-- OrbList = debug.getupvalue(orbsScript.Collect, 1)
-	local CoinsTable = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Coins", 10)).DestroyAllCoins, 1)
-	local RenderedPets = debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Pets", 10)).NetworkUpdate, 1)
+	local CoinsTable = nil --debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Coins", 10)).DestroyAllCoins, 1)
+	local RenderedPets = nil --debug.getupvalue(getsenv(LocalPlayer.PlayerScripts.Scripts.Game:WaitForChild("Pets", 10)).NetworkUpdate, 1)
 	
 	
 	local IsHardcore = Library.Shared.IsHardcore
