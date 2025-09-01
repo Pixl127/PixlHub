@@ -62,7 +62,7 @@ InfoTab:CreateParagraph({
     Content = [[ this script was created by Pixl ]]
 })
 
-InfoTab:CreateLabel({
+local dsLabel = InfoTab:CreateLabel({
     ".gg/server", -- Text
     4483362458, -- Icon
     Color3.fromRGB(150, 24, 24), -- Color
