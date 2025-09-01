@@ -1,7 +1,4 @@
---dont look u skid
-
-
-getgenv().UwU = loadstring(game:HttpGet"https://raw.githubusercontent.com/L1ZOT/Project-PJM/main/Notifycation")()
+getgenv().UwU = loadstring(game:HttpGet"https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/notifycation")()
 
     local SettingsTable = {
       FarmNearest = nil;
