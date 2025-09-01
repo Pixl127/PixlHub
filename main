@@ -77,6 +77,8 @@ local autoOpen = false
 local disableHatchAnimation = true
 local originalOpenEggFunctions = {}
 
+local EggConfigSectin = EggTab:CreateSection("Egg Config")
+
 -- Grab all eggs
 local allEggs = {}
 for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
@@ -167,6 +169,8 @@ local function teleportTo(position)
     end
 end
 
+local TogglesSection = EggTab:CreateSection("Auto Hatch")
+
 local AutoOpenEggToggle = EggTab:CreateToggle({
     Name = "Auto Hatch Selected Egg",
     CurrentValue = false,
@@ -205,6 +209,8 @@ local AutoOpenEggToggle = EggTab:CreateToggle({
         end
     end,
 })
+
+local testDivider = EggTab:CreateDivider()
 
 local DisableHatchAnimToggle = EggTab:CreateToggle({
     Name = "Disable Hatch Animation",
@@ -303,5 +309,7 @@ local LoadInfiniteYieldButton = DevTab:CreateButton({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end,
 })
+
+Rayfield:LoadConfiguration()
 
 -- https://github.com/Pixl127/PixlHub
