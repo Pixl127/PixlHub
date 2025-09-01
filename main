@@ -102,7 +102,7 @@ local ReloadEggs = EggTab:CreateButton({
 
 -- 📦 Variablen für Auswahl und Status
 local selectedEgg = allEggs[1]
-local selectedAmount = "3 Eggs"
+local selectedAmount = "8 Eggs"
 local autoOpen = false
 local disableHatchAnimation = true
 local originalOpenEggFunctions = {}
@@ -162,7 +162,7 @@ end
 
 -- 🕹 Toggle für Auto-Hatch
 local AutoOpenEggToggle = EggTab:CreateToggle({
-    Name = "Auto Hatch Selected Egg (Safe)",
+    Name = "Auto Hatch Selected Egg",
     CurrentValue = false,
     Flag = "Toggle_AutoHatch",
     Callback = function(Value)
@@ -259,7 +259,7 @@ local connection
 
 local AntiAFKToggle = MiscTab:CreateToggle({
     Name = "Anti-AFK",
-    CurrentValue = false,
+    CurrentValue = true,
     Flag = "Toggle_AntiAFK",
     Callback = function(Value)
         AntiAFK = Value
