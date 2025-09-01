@@ -1,40 +1,40 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "PixlHub",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "PixlHub",
-   LoadingSubtitle = "by Pixl",
-   ShowText = "",         -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default",     -- Check https://docs.sirius.menu/rayfield/configuration/themes
+    Name = "PixlHub",
+    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+    LoadingTitle = "PixlHub",
+    LoadingSubtitle = "by Pixl",
+    ShowText = "",        -- for mobile users to unhide rayfield, change if you'd like
+    Theme = "Default",    -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+    ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
 
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "PixlLib", -- Create a custom folder for your hub/game
-      FileName = "PixlHub"
-   },
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "PixlLib", -- Create a custom folder for your hub/game
+        FileName = "PixlHub"
+    },
 
-   Discord = {
-      Enabled = false,         -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true     -- Set this to false to make them join the discord every time they load it up
-   },
+    Discord = {
+        Enabled = false,       -- Prompt the user to join your Discord server if their executor supports it
+        Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+        RememberJoins = true   -- Set this to false to make them join the discord every time they load it up
+    },
 
-   KeySystem = false, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key",                                    -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true,                                      -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false,                             -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = { "Hello" }                                    -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-   }
+    KeySystem = false, -- Set this to true to use our key system
+    KeySettings = {
+        Title = "Untitled",
+        Subtitle = "Key System",
+        Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+        FileName = "Key",                                  -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+        SaveKey = true,                                    -- The user's key will be saved, but if you change the key, they will be unable to use your script
+        GrabKeyFromSite = false,                           -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+        Key = { "Hello" }                                  -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+    }
 })
 --------------------------------------------------------
 -- Tabs
@@ -53,8 +53,8 @@ local DevTab = Window:CreateTab("Dev", 4483362458)
 --------------------------------------------------------
 
 InfoTab:CreateParagraph({
-   Title = "test?",
-   Content = [[ yo idk bro ]]
+    Title = "test?",
+    Content = [[ yo idk bro ]]
 })
 
 
@@ -78,11 +78,33 @@ for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
     end
 end
 
+local ReloadEggs = EggTab:CreateButton({
+    Name = "Reload Egg Dropdown",
+    Callback = function()
+        for egg in pairs(allEggs) do
+            allEggs[egg] = nil
+        end
+
+        for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
+            if area:FindFirstChild("Eggs") then
+                for _, egg in ipairs(area.Eggs:GetChildren()) do
+                    local id = egg:GetAttribute("ID")
+                    if id then
+                        table.insert(allEggs, id)
+                    end
+                end
+            end
+        end
+
+        Dropdown:Refresh({allEggs}) -- The new list of options
+    end,
+})
+
 -- 📦 Variablen für Auswahl und Status
 local selectedEgg = allEggs[1]
-local selectedAmount = "1Egg"
+local selectedAmount = "3 Eggs"
 local autoOpen = false
-local disableHatchAnimation = false
+local disableHatchAnimation = true
 local originalOpenEggFunctions = {}
 
 -- 🥚 Dropdown für Egg-Auswahl
@@ -94,34 +116,22 @@ local EggSelectionDropdown = EggTab:CreateDropdown({
     Flag = "Dropdown_SelectEgg",
     Callback = function(Options)
         selectedEgg = Options[1]
-        Rayfield:Notify({
-            Title = "Egg Selected",
-            Content = selectedEgg,
-            Duration = 5,
-            Image = 4483362458,
-        })
     end,
 })
 
--- 🔢 Dropdown für Menge-Auswahl
+
 local EggAmountDropdown = EggTab:CreateDropdown({
     Name = "Select Egg Opening Amount",
-    Options = { "1Egg", "3Eggs", "8Eggs" },
+    Options = { "1 Egg", "3 Eggs", "8 Eggs" },
     CurrentOption = { selectedAmount },
     MultipleOptions = false,
     Flag = "Dropdown_SelectAmount",
     Callback = function(Options)
         selectedAmount = Options[1]
-        Rayfield:Notify({
-            Title = "Opening Amount Selected",
-            Content = selectedAmount,
-            Duration = 5,
-            Image = 4483362458,
-        })
     end,
 })
 
--- 🛡 Schutzfunktionen
+-- Security functions
 local function getEggPositionByID(eggID)
     for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
         if area:FindFirstChild("Eggs") then
@@ -136,13 +146,15 @@ local function getEggPositionByID(eggID)
 end
 
 local function distanceTo(position)
-    local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    local hrp = game.Players.LocalPlayer.Character and
+    game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if not hrp then return math.huge end
     return (hrp.Position - position).Magnitude
 end
 
 local function teleportTo(position)
-    local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    local hrp = game.Players.LocalPlayer.Character and
+    game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
     if hrp then
         hrp.CFrame = CFrame.new(position + Vector3.new(0, 3, 0))
     end
@@ -273,25 +285,23 @@ local AntiAFKToggle = MiscTab:CreateToggle({
 -- Script Tab
 --------------------------------------------------------
 local DestroyUiButton = ScriptTab:CreateButton({
-   Name = "Destroy UI",
-   Callback = function()
-      Rayfield:Destroy()
-   end,
+    Name = "Destroy UI",
+    Callback = function()
+        Rayfield:Destroy()
+    end,
 })
 
 --------------------------------------------------------
 -- Dev Tab
 --------------------------------------------------------
 local LoadInfiniteYieldButton = DevTab:CreateButton({
-   Name = "Load Infinite Yield",
-   Callback = function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-   end,
+    Name = "Load Infinite Yield",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end,
 })
 
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/PixlHub-PSXU"))()
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/test"))()
 
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/test"))()
-
-
