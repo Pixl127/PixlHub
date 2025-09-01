@@ -57,6 +57,18 @@ InfoTab:CreateParagraph({
     Content = [[ yo idk bro ]]
 })
 
+InfoTab:CreateParagraph({
+    Title = "Credits",
+    Content = [[ this script was created by Pixl ]]
+})
+
+InfoTab:CreateLabel({
+    ".gg/server", -- Text
+    4483362458, -- Icon
+    Color3.fromRGB(150, 24, 24), -- Color
+    false -- IgnoreTheme
+})
+
 
 --------------------------------------------------------
 -- Farm Tab
@@ -67,6 +79,8 @@ InfoTab:CreateParagraph({
 --------------------------------------------------------
 
 --- Variables
+local selectedEgg = nil
+local selectedAmount = nil
 local autoOpen = false
 local disableHatchAnimation = true
 local originalOpenEggFunctions = {}
@@ -83,6 +97,17 @@ for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
         end
     end
 end
+
+local EggSelectionDropdown = EggTab:CreateDropdown({
+    Name = "Select Egg",
+    Options = allEggs,
+    CurrentOption = { allEggs[1] },
+    MultipleOptions = false,
+    Flag = "Dropdown_SelectEgg",
+    Callback = function(Options)
+        selectedEgg = Options[1]
+    end,
+})
 
 local ReloadEggs = EggTab:CreateButton({
     Name = "Reload Egg Dropdown",
@@ -107,17 +132,6 @@ local ReloadEggs = EggTab:CreateButton({
             EggSelectionDropdown:Set(allEggs[1])
             selectedEgg = allEggs[1]
         end
-    end,
-})
-
-local EggSelectionDropdown = EggTab:CreateDropdown({
-    Name = "Select Egg",
-    Options = allEggs,
-    CurrentOption = { allEggs[1] },
-    MultipleOptions = false,
-    Flag = "Dropdown_SelectEgg",
-    Callback = function(Options)
-        selectedEgg = Options[1]
     end,
 })
 
@@ -256,7 +270,7 @@ local AntiAFK = false
 local connection
 
 local AntiAFKToggle = MiscTab:CreateToggle({
-    Name = "Anti-AFK",
+    Name = "Anti AFK",
     CurrentValue = true,
     Flag = "Toggle_AntiAFK",
     Callback = function(Value)
@@ -292,7 +306,7 @@ local DestroyUiButton = ScriptTab:CreateButton({
 -- Dev Tab
 --------------------------------------------------------
 local LoadInfiniteYieldButton = DevTab:CreateButton({
-    Name = "Load Infinite Yield",
+    Name = "Load IY",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end,
