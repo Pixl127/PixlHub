@@ -301,7 +301,9 @@ local LoadInfiniteYieldButton = DevTab:CreateButton({
     end,
 })
 
--- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/PixlHub-PSXU"))()
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/main"))()
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/test"))()
 
 -- loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixl127/PixlHub/refs/heads/main/test"))()
+
+-- https://github.com/Pixl127/PixlHub
