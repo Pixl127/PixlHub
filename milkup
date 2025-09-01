@@ -190,7 +190,7 @@ if game.PlaceId == 6284583030 or game.PlaceId == 10321372166 or game.PlaceId == 
 	
 	if not bypassSuccess then
 		print(bypassError)
-		LocalPlayer:Kick("Error while bypassing network, try again or wait for an update!")
+		--LocalPlayer:Kick("Error while bypassing network, try again or wait for an update!")
 		return
 	end
 	
