@@ -65,7 +65,15 @@ InfoTab:CreateParagraph({
 --------------------------------------------------------
 -- Egg Tab
 --------------------------------------------------------
--- 🥚 Alle Eggs aus der Map einsammeln
+
+--- Variables
+local selectedEgg = allEggs[1]
+local selectedAmount = "8 Eggs"
+local autoOpen = false
+local disableHatchAnimation = true
+local originalOpenEggFunctions = {}
+
+-- Grab all eggs
 local allEggs = {}
 for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
     if area:FindFirstChild("Eggs") then
@@ -81,33 +89,29 @@ end
 local ReloadEggs = EggTab:CreateButton({
     Name = "Reload Egg Dropdown",
     Callback = function()
-        for egg in pairs(allEggs) do
-            allEggs[egg] = nil
-        end
-
+        local newEggs = {}
         for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
             if area:FindFirstChild("Eggs") then
                 for _, egg in ipairs(area.Eggs:GetChildren()) do
                     local id = egg:GetAttribute("ID")
                     if id then
-                        table.insert(allEggs, id)
+                        table.insert(newEggs, id)
                     end
                 end
             end
         end
 
-        EggSelectionDropdown:Refresh({allEggs})
+        allEggs = newEggs
+
+        EggSelectionDropdown:Refresh(allEggs)
+
+        if allEggs[1] then
+            EggSelectionDropdown:Set(allEggs[1])
+            selectedEgg = allEggs[1]
+        end
     end,
 })
 
--- 📦 Variablen für Auswahl und Status
-local selectedEgg = allEggs[1]
-local selectedAmount = "8 Eggs"
-local autoOpen = false
-local disableHatchAnimation = true
-local originalOpenEggFunctions = {}
-
--- 🥚 Dropdown für Egg-Auswahl
 local EggSelectionDropdown = EggTab:CreateDropdown({
     Name = "Select Egg",
     Options = allEggs,
@@ -131,7 +135,6 @@ local EggAmountDropdown = EggTab:CreateDropdown({
     end,
 })
 
--- Security functions
 local function getEggPositionByID(eggID)
     for _, area in ipairs(workspace.__MAP.Eggs:GetChildren()) do
         if area:FindFirstChild("Eggs") then
@@ -160,7 +163,6 @@ local function teleportTo(position)
     end
 end
 
--- 🕹 Toggle für Auto-Hatch
 local AutoOpenEggToggle = EggTab:CreateToggle({
     Name = "Auto Hatch Selected Egg",
     CurrentValue = false,
@@ -200,7 +202,6 @@ local AutoOpenEggToggle = EggTab:CreateToggle({
     end,
 })
 
--- 🖼 Toggle zum „Unsichtbar-Machen“ der Hatch-Animation via GUI
 local DisableHatchAnimToggle = EggTab:CreateToggle({
     Name = "Disable Hatch Animation",
     CurrentValue = false,
@@ -227,7 +228,6 @@ local DisableHatchAnimToggle = EggTab:CreateToggle({
     end,
 })
 
--- Listener: verschiebt neue Hatch-Objekte aus dem Sichtfeld
 workspace.CurrentCamera.ChildAdded:Connect(function(child)
     if disableHatchAnimation then
         -- Prüfen, ob es eine Hatch-Animation ist
@@ -264,7 +264,6 @@ local AntiAFKToggle = MiscTab:CreateToggle({
     Callback = function(Value)
         AntiAFK = Value
         if AntiAFK then
-            -- Verbindung herstellen
             connection = game.Players.LocalPlayer.Idled:Connect(function()
                 game:GetService("VirtualUser"):ClickButton2(Vector2.new())
             end)
