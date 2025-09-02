@@ -270,6 +270,35 @@ end)
 --------------------------------------------------------
 -- Misc Tab
 --------------------------------------------------------
+
+local autoCollectGifts = false
+
+local AutoCollectGifts = MiscTab:CreateToggle({
+    Name = "Auto Collect Free Gifts",
+    CurrentValue = false,
+    Flag = "Auto_Collect_Free_Gifts",
+    Callback = function(Value)
+        autoCollectGifts = Value
+        if autoCollect then
+            task.spawn(function()
+                while autoCollect do
+                    for i = 1, 12 do
+                        pcall(function()
+                            workspace.__THINGS.__REMOTES["redeem free gift"]:InvokeServer(i)
+                        end)
+                        task.wait(0.2) -- kleine Pause zwischen den Redeems
+                    end
+                    task.wait(60) -- warte bevor erneut alle geprüft werden (cooldown beachten)
+                end
+            end)
+        end
+    end,
+})
+
+
+
+
+
 local AntiAFK = false
 local connection
 
