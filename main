@@ -72,7 +72,7 @@ InfoTab:CreateParagraph({
 
 --- Variables
 local selectedEgg = nil
-local selectedAmount = nil
+local selectedAmount = "8Eggs"
 local autoOpen = false
 local disableHatchAnimation = true
 local originalOpenEggFunctions = {}
@@ -141,8 +141,8 @@ local ReloadEggs = EggTab:CreateButton({
 
 local EggAmountDropdown = EggTab:CreateDropdown({
     Name = "Select Egg Opening Amount",
-    Options = { "1 Egg", "3 Eggs", "8 Eggs" },
-    CurrentOption = { "8 Eggs" },
+    Options = { "1Egg", "3Eggs", "8Eggs" },
+    CurrentOption = { "8Eggs" },
     MultipleOptions = false,
     Flag = "Dropdown_SelectAmount",
     Callback = function(Options)
@@ -198,9 +198,9 @@ local AutoOpenEggToggle = EggTab:CreateToggle({
                             end
 
                             local open3, open8, extra = false, false, false
-                            if selectedAmount == "3 Eggs" then
+                            if selectedAmount == "3Eggs" then
                                 open3 = true
-                            elseif selectedAmount == "8 Eggs" then
+                            elseif selectedAmount == "8Eggs" then
                                 open8, extra = true, true
                             end
 
