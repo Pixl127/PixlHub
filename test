@@ -263,22 +263,6 @@ end
             end
          end)
   
-        --  Misc:Button("Unlock Hoverboards", function()
-        --   spawn(function()
-        --       local tabel = require(game.ReplicatedStorage.Framework.Modules.Client["4 | Save"]).Get()
-        --       tabel.Hoverboards = {}
-        --       for i,v in pairs(game.ReplicatedStorage.Game.Hoverboards:GetChildren())do
-        --           table.insert(tabel.Hoverboards, v.Name)
-        --       end
-        --       getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs.Hoverboards).Update()
-        --       getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs.Hoverboards).Equip = function(board)
-        --           tabel.EquippedHoverboard = board
-        --           getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.GUIs.Hoverboards).Update()
-        --       end
-        --   end)
-        --   getgenv().PromptGuioof:AddText("Got Some Hoverboards", Enum.Font.Code, Color3.fromRGB(200, 200, 200))
-        --   end)
-  
           Misc:line()
           Misc:Button("Teleport to Trading Plaza", function()
               if game.PlaceId ~= 7722306047 then
