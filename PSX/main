@@ -36,13 +36,20 @@ local Window = Rayfield:CreateWindow({
         Key = { "Hello" }                                    -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
     }
 })
+
+-- global variables
+local remotes = workspace:WaitForChild("__THINGS"):WaitForChild("__REMOTES")
+local library = require(game:GetService("ReplicatedStorage"):WaitForChild("Framework"):WaitForChild("Library"))
+
+
 --------------------------------------------------------
 -- Tabs
 --------------------------------------------------------
 local InfoTab = Window:CreateTab("Info", 4483362458)
---local FarmTab = Window:CreateTab("Main", 4483362458)
+--local FarmTab = Window:CreateTab("Farming", 4483362458)
 local EggTab = Window:CreateTab("Eggs", 4483362458)
 local MiscTab = Window:CreateTab("Misc", 4483362458)
+--local WebHookTab = Window:CreateTab("Webhooks", 4483362458)
 local ScriptTab = Window:CreateTab("Script", 4483362458)
 local DevTab = Window:CreateTab("Dev", 4483362458)
 
@@ -270,32 +277,6 @@ end)
 --------------------------------------------------------
 -- Misc Tab
 --------------------------------------------------------
-local autoCollect = false
-
-local AutoCollectGifts = MiscTab:CreateToggle({
-    Name = "Auto Collect Free Gifts",
-    CurrentValue = false,
-    Flag = "Auto_Collect_Free_Gifts",
-    Callback = function(Value)
-        autoCollect = Value
-        if autoCollect then
-            task.spawn(function()
-                while autoCollect do
-                    for i = 1, 12 do
-                        pcall(function()
-                            workspace.__THINGS.__REMOTES["redeem free gift"]:InvokeServer(i)
-                        end)
-                        task.wait(1)
-                    end
-                    task.wait(60)
-                end
-            end)
-        end
-    end,
-})
-
-
-
 local AntiAFK = false
 local connection
 
@@ -319,6 +300,9 @@ local AntiAFKToggle = MiscTab:CreateToggle({
 })
 
 
+--------------------------------------------------------
+-- WebHook Tab
+--------------------------------------------------------
 
 
 
